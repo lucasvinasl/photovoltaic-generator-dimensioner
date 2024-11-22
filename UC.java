@@ -1,5 +1,7 @@
 package org.example;
 
+import java.sql.ResultSet;
+
 public class UC {
     // atributos
     private float consumo;
@@ -51,6 +53,16 @@ public class UC {
         this.fase = fase;
     }
 
+    public void Resultado(){
+
+        float consumo = getConsumo();
+        float desempenho = (getDesempenho()*100);
+        float hsp = getHsp();
+        System.out.printf("Projeto Realizado para Unidade Consumidora com Consumo: %.2f kWh/mês. %n", consumo);
+        System.out.printf("Considerando um Desempenho de %.2f% e HSP de %.2f %n.", desempenho,hsp);
+        System.out.println("");
+
+    }
 
 
 }

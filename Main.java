@@ -58,7 +58,7 @@ public class Main {
                 project.setDisponibilidade();
                 project.setPotencia();
                 project.setGeracao();
-                project.ResultadoProjeto();
+                project.Resultado();
 
                 System.out.println("Deseja realizar outro dimensionamento? (S/N): ");
                 char resposta = input.next().toLowerCase().charAt(0);
