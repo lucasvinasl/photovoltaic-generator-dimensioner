@@ -1,75 +1,68 @@
-package org.example;
+package cursodobackaofront;
 
+import javax.swing.*;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.util.Scanner;
-
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
 
-        boolean continuar = true;
+            String codigoGeradora = JOptionPane.showInputDialog("Informe o Código da Geradora: ");
+            float consumoGeradora = Float.parseFloat(JOptionPane.showInputDialog("Informe o Consumo da Geradora: "));
+            float simultaneidadeGeradora = Float.parseFloat(JOptionPane.showInputDialog("Informe a % Simultaneidade: "));
+            String faseGeradora = JOptionPane.showInputDialog("Informe a Fase (Monofasico / Bifasico / Trifasico): ");
 
-        while (continuar) {
+            Projeto projeto = new Projeto(codigoGeradora, consumoGeradora, simultaneidadeGeradora, faseGeradora);
 
-                UC uc = new UC();
+            projeto.setCodigoGeradora(codigoGeradora);
+            projeto.setConsumoGeradora(consumoGeradora);
+            projeto.setSimultaneidadeGeradora(simultaneidadeGeradora);
+            projeto.setFaseGeradora(faseGeradora);
+            System.out.println(projeto);
 
-                System.out.println("Informe o Consumo: ");
-                float consumo = input.nextFloat();
-                if (consumo == 0) {
-                    System.out.println("Consumo inválido. Reiniciando...");
-                    continue;
-                }
-                uc.setConsumo(consumo);
+            int potenciaModulo = Integer.parseInt(JOptionPane.showInputDialog("Potência do Módulo em Wp: "));
+            float desempenhoProjeto = Float.parseFloat(JOptionPane.showInputDialog("Desempenho do Sistema em %: "));
+            float hspProjeto = Float.parseFloat(JOptionPane.showInputDialog("HSP do Local: "));
 
+            int adicionarBeneficiaria = JOptionPane.showConfirmDialog(null,
+                    "Deseja adicionar Beneficiária?");
 
-                System.out.println("Informe o Desempenho em %: ");
-                float desempenho = input.nextFloat();
-                if (desempenho == 0) {
-                    System.out.println("Desempenho inválido. Reiniciando...");
-                    continue; // Reinicia o loop
-                }
-                uc.setDesempenho(desempenho);
+            if(adicionarBeneficiaria == JOptionPane.YES_OPTION){
+                int qtdBeneficiarias = Integer.parseInt(JOptionPane.showInputDialog("Quantas beneficiárias deseja adicionar?"));
+                for(int i = 0; i < qtdBeneficiarias; i++){
+                    Beneficiaria beneficiaria = new Beneficiaria();
+                    String codigoBeneficiaria = JOptionPane.showInputDialog("Informe o Código da Beneficiária "+(i+1)+":");
+                    float consumoBeneficiaria = Float.parseFloat(JOptionPane.showInputDialog("Informe o Consumo da Beneficiária "+(i+1)+":"));
+                    beneficiaria.setCodigoBeneficiaria(codigoBeneficiaria);
+                    beneficiaria.setConsumoBeneficiaria(consumoBeneficiaria);
+                    projeto.getBeneficiarias().add(beneficiaria);
 
-
-                System.out.println("Informe o HSP: ");
-                float hsp = input.nextFloat();
-                if (hsp == 0) {
-                    System.out.println("HSP inválido. Reiniciando...");
-                    continue;
-                }
-                uc.setHsp(hsp);
-                input.nextLine();
-
-                System.out.println("Informe a Fase (Monofasico / Bifasico / Trifasico): ");
-                String fase = input.nextLine();
-                uc.setFase(fase);
-
-                Projeto project = new Projeto(uc.getConsumo(), uc.getDesempenho(), uc.getHsp(), uc.getFase());
-
-
-                System.out.println("Informe a Potência do Módulo em Wp: ");
-                float potenciaMod = input.nextFloat();
-                if (potenciaMod == 0) {
-                    System.out.println("Potência inválida. Reiniciando...");
-                    continue;
                 }
 
-                project.setPotenciaMod(potenciaMod);
-                project.setDisponibilidade();
-                project.setPotencia();
-                project.setGeracao();
-                project.Resultado();
+                JOptionPane.showMessageDialog(null,"Beneficiárias Adicionadas!");
 
-                System.out.println("Deseja realizar outro dimensionamento? (S/N): ");
-                char resposta = input.next().toLowerCase().charAt(0);
+            }
 
-                if (resposta == 'n') {
-                    continuar = false;
-                    System.out.println("Obrigado!");
-                }
+            projeto.setPotenciaMod(potenciaModulo);
+            projeto.setDesempenho(desempenhoProjeto);
+            projeto.setHsp(hspProjeto);
+            projeto.setDisponibilidade();
+            projeto.setPotencia();
+            projeto.setGeracao();
+            System.out.println(projeto);
 
-        }
+            HashMap<String, Float> percentuais = projeto.porcentagemBeneficiaria();
+            for(Map.Entry<String, Float> entry : percentuais.entrySet()){
+                System.out.println("Código da Beneficiária: " + entry.getKey() + " - Percentual: " + entry.getValue() + "%");
+            }
 
-        input.close();
+            /*
+                        JOptionPane.showMessageDialog(null,"Injetado: "+projeto.injetadoGeradora()+"\n"+
+                    "Sobra para o Rateio: "+projeto.sobraRateio());
+             */
+
+
     }
 }
